@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Cartório Central de Registro Civil – SP | 2ª Via de Nascimento</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#f6f7fb;--card:#ffffff;--primary:#0a3d62;--primary-600:#072c46;--accent:#1e6bb8;--text:#0f172a;--muted:#64748b;
+      --ok:#10b981;--ok-200:#ecfdf5;--danger:#ef4444;--radius:16px
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      background:var(--bg);color:var(--text);
+      display:flex;flex-direction:column;min-height:100vh;
+      font-size:16px;line-height:1.45;-webkit-text-size-adjust:100%;
+    }
+
+    /* Header */
+    header{background:linear-gradient(135deg,var(--primary),var(--accent));color:#fff}
+    .brand{max-width:1120px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:14px 16px}
+    .brand-left{display:flex;align-items:center;gap:12px}
+    .logo{width:44px;height:44px;border-radius:12px;background:rgba(255,255,255,.14);display:grid;place-items:center;box-shadow:0 6px 18px rgba(0,0,0,.15)}
+    .logo svg{width:26px;height:26px;fill:#fff}
+    .brand-title{display:flex;flex-direction:column}
+    .brand-title .name{font-weight:800;letter-spacing:.2px}
+    .brand-title .sub{font-size:12px;opacity:.9}
+    .badge{background:rgba(255,255,255,.14);color:#fff;padding:6px 10px;border-radius:999px;font-weight:600;font-size:12px}
+
+    /* Layout */
+    main{flex:1}
+    .container{max-width:1120px;margin:12px auto;padding:12px}
+    .card{background:var(--card);border-radius:var(--radius);box-shadow:0 12px 40px rgba(2,8,23,.06);padding:16px;position:relative}
+
+    /* Indicador de segurança */
+    .secure-banner{
+      display:flex;gap:10px;align-items:center;
+      background:#e9fbf3;border:1px solid #bbf7d0;color:#065f46;
+      border-radius:12px;padding:10px 12px;margin:0 0 12px;
+      font-weight:700;font-size:14px;
+    }
+    .secure-banner .check{
+      width:22px;height:22px;border-radius:999px;background:var(--ok);color:#fff;display:grid;place-items:center;
+      transform:scale(0);animation:pop .45s ease .2s forwards;
+      font-size:14px;font-weight:800;
+    }
+    @keyframes pop{to{transform:scale(1)}}
+
+    /* Progress bar */
+    .progress{height:10px;background:#eaf0ff;border-radius:999px;overflow:hidden;margin:0 0 10px}
+    .progress .bar{height:100%;width:0;background:linear-gradient(90deg,var(--primary),var(--accent));transition:width .35s ease}
+
+    /* Stepper (quadradinhos) */
+    .stepper{
+      display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:8px 0 12px;
+    }
+    .step{
+      display:flex;align-items:center;gap:10px;
+      border:1.5px solid #cbd5e1;background:#f8fafc;border-radius:12px;
+      padding:10px 12px;min-height:44px;transition:.2s;
+    }
+    .step .dot{width:28px;height:28px;border-radius:8px;display:grid;place-items:center;font-weight:800;background:#e2e8f0;color:#0f172a}
+    .step .lbl{font-size:13px;font-weight:700;color:#0f172a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .step.active{border-color:#93c5fd;background:#eff6ff}
+    .step.active .dot{background:#2563eb;color:#fff}
+    .step.done{border-color:#86efac;background:var(--ok-200)}
+    .step.done .dot{background:var(--ok);color:#fff}
+
+    /* Forms */
+    h2{margin:0 0 8px;font-size:1.125rem}
+    form{display:grid;gap:12px}
+    .grid{display:grid;gap:10px}
+    .col-2{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .col-3{grid-template-columns:repeat(3,minmax(0,1fr))}
+    label{font-size:0.9rem;font-weight:600;color:#334155;margin-bottom:6px;display:block}
+    input, select{
+      width:100%;padding:14px 14px;border:1px solid #e5e7eb;border-radius:12px;background:#fff;
+      font-size:16px;min-height:48px;outline:none;transition:.2s;
+    }
+    input:focus, select:focus{border-color:#b9ccff;box-shadow:0 0 0 3px rgba(14,115,255,.12)}
+    .hint{font-size:12px;color:var(--muted)}
+    .error{font-size:12px;color:var(--danger);margin-top:6px;display:none}
+    .error.show{display:block}
+
+    /* Actions */
+    .actions{display:flex;gap:12px;justify-content:flex-end;margin-top:12px;flex-wrap:wrap}
+    .actions > :first-child{margin-right:auto}
+    button{
+      appearance:none;border:none;background:var(--primary);color:#fff;
+      padding:12px 18px;border-radius:12px;font-weight:700;cursor:pointer;transition:.2s;
+      min-height:48px;font-size:16px;
+    }
+    button:hover{background:var(--primary-600)}
+    button[disabled]{opacity:.6;cursor:not-allowed}
+    .btn-secondary{background:#e2e8f0;color:#0f172a}
+    .btn-ghost{background:transparent;color:var(--primary);border:1px solid #cbd5e1}
+
+    /* Etapas (conteúdo) */
+    section{display:none;opacity:0;pointer-events:none;transition:opacity .2s ease}
+    section.active{display:block;opacity:1;pointer-events:auto}
+
+    /* Resumo */
+    .summary{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px}
+    .summary .box{background:#f8fafc;border:1px solid #e5e7eb;border-radius:12px;padding:10px}
+    .summary .row{display:flex;justify-content:space-between;gap:12px;padding:6px 0;border-bottom:1px dashed #e5e7eb}
+    .summary .row:last-child{border-bottom:none}
+
+    /* Bloco de selos + atendimento */
+    .trust{
+      margin-top:14px;border-top:1px dashed #e5e7eb;padding-top:12px;
+      display:grid;gap:10px;grid-template-columns:1fr;
+    }
+    .seals{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+    .seal{
+      display:flex;align-items:center;gap:8px;
+      background:#f8fafc;border:1px solid #e5e7eb;border-radius:12px;padding:8px 10px;
+      font-size:12px;color:#0f172a;font-weight:700
+    }
+    .seal .ico{
+      width:24px;height:24px;border-radius:999px;display:grid;place-items:center;font-size:12px;font-weight:800;color:#fff;
+      background:#64748b;flex:0 0 auto;
+    }
+    .seal.icp .ico{background:#0ea5e9}
+    .seal.gov .ico{background:#22c55e}
+    .seal.ssl .ico{background:#6366f1}
+    .helpline{font-size:12px;color:#334155}
+    .helpline strong{font-weight:800}
+
+    /* Footer */
+    footer{padding:0 16px 22px}
+    .foot{max-width:1120px;margin:8px auto 0;color:#475569;font-size:12px}
+    .foot .panel{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:12px}
+
+    /* MOBILE */
+    @media (max-width:860px){
+      .container{padding:12px}
+      .grid.col-3{grid-template-columns:1fr}
+      .grid.col-2{grid-template-columns:1fr}
+      .summary{grid-template-columns:1fr}
+      .stepper{grid-template-columns:repeat(2,1fr);gap:8px}
+      .step{padding:8px 10px;min-height:40px}
+      .step .dot{width:24px;height:24px;border-radius:6px;font-size:12px}
+      .step .lbl{font-size:12px}
+      .seals{grid-template-columns:1fr 1fr}
+    }
+    @media (max-width:420px){
+      .stepper{grid-template-columns:1fr}
+      .actions{flex-direction:column;align-items:stretch}
+      .actions > *{width:100%}
+      .btn-ghost{order:1}
+      .seals{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <div class="brand-left">
+        <div class="logo" aria-hidden="true">
+          <svg viewBox="0 0 24 24" role="img" aria-label="Brasão"><path d="M12 2l6 3v5c0 5-3.2 8.9-6 10-2.8-1.1-6-5-6-10V5l6-3zm0 3.1L8 6.8v3.1c0 3.8 2.2 7.1 4 8 1.8-.9 4-4.2 4-8V6.8l-4-1.7zm0 2.4a3 3 0 110 6 3 3 0 010-6z"/></svg>
+        </div>
+        <div class="brand-title">
+          <div class="name">Cartório Central de Registro Civil</div>
+          <div class="sub">Sede São Paulo/SP</div>
+        </div>
+      </div>
+      <span class="badge">Serviço Online</span>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="card">
+      <!-- banner de segurança -->
+      <div class="secure-banner">
+        <div class="check">✓</div>
+        <div>🔒 Conexão Segura — Protegido por Certificado SSL</div>
+      </div>
+
+      <div class="progress" aria-hidden="true"><div class="bar" id="progress-bar"></div></div>
+
+      <!-- Stepper -->
+      <div class="stepper" id="stepper">
+        <div class="step active" data-step="1"><span class="dot">1</span><span class="lbl">Identificação</span></div>
+        <div class="step" data-step="2"><span class="dot">2</span><span class="lbl">Endereço</span></div>
+        <div class="step" data-step="3"><span class="dot">3</span><span class="lbl">Dados da Certidão</span></div>
+        <div class="step" data-step="4"><span class="dot">4</span><span class="lbl">Resumo</span></div>
+      </div>
+
+      <!-- ETAPA 1 -->
+      <section id="etapa-1" class="active">
+        <form id="form-ident" novalidate>
+          <div class="grid col-2">
+            <div>
+              <label for="nome">Nome completo</label>
+              <input id="nome" name="nome" autocomplete="name" required />
+              <div class="error" id="err-nome">Informe o nome completo.</div>
+            </div>
+            <div>
+              <label for="cpf">CPF</label>
+              <input id="cpf" name="cpf" inputmode="numeric" maxlength="14" placeholder="000.000.000-00" required />
+              <div class="error" id="err-cpf">CPF inválido.</div>
+            </div>
+          </div>
+          <div class="grid col-3">
+            <div>
+              <label for="mae">Nome da mãe</label>
+              <input id="mae" name="mae" />
+            </div>
+            <div>
+              <label for="pai">Nome do pai</label>
+              <input id="pai" name="pai" />
+            </div>
+            <div>
+              <label for="nascimento">Data de nascimento</label>
+              <input id="nascimento" name="nascimento" type="date" />
+            </div>
+          </div>
+          <div class="grid col-3">
+            <div>
+              <label for="naturalidade">Naturalidade (Cidade)</label>
+              <input id="naturalidade" name="naturalidade" />
+            </div>
+            <div>
+              <label for="ufNasc">UF de nascimento</label>
+              <input id="ufNasc" name="ufNasc" maxlength="2" placeholder="SP" />
+            </div>
+            <div>
+              <label for="sexo">Sexo</label>
+              <select id="sexo" name="sexo">
+                <option value="">Selecione</option>
+                <option>Masculino</option>
+                <option>Feminino</option>
+                <option>Não declarado</option>
+              </select>
+            </div>
+          </div>
+          <div class="actions">
+            <button type="button" class="btn-ghost" disabled>Voltar</button>
+            <button type="submit">Próximo</button>
+          </div>
+
+          <!-- Selos + Atendimento -->
+          <div class="trust">
+            <div class="seals">
+              <div class="seal icp"><span class="ico">ID</span> Certificado Digital ICP-Brasil</div>
+              <div class="seal gov"><span class="ico">BR</span> Serviço Autenticado no GOV.BR</div>
+              <div class="seal ssl"><span class="ico">SSL</span> Conexão Segura 256 bits</div>
+            </div>
+            <div class="helpline">📞 <strong>Central de Atendimento: 0800 000 000</strong> (24h)</div>
+          </div>
+        </form>
+      </section>
+
+      <!-- ETAPA 2 -->
+      <section id="etapa-2">
+        <form id="form-end" novalidate>
+          <div class="grid col-3">
+            <div>
+              <label for="cep">CEP</label>
+              <input id="cep" name="cep" inputmode="numeric" maxlength="9" placeholder="00000-000" required />
+              <div class="hint">O endereço é preenchido automaticamente via CEP (ViaCEP).</div>
+              <div class="error" id="err-cep">Informe um CEP válido (8 dígitos).</div>
+            </div>
+            <div>
+              <label for="uf">UF</label>
+              <input id="uf" name="uf" required />
+            </div>
+            <div>
+              <label for="cidade">Cidade</label>
+              <input id="cidade" name="cidade" required />
+            </div>
+          </div>
+          <div class="grid col-2">
+            <div>
+              <label for="bairro">Bairro</label>
+              <input id="bairro" name="bairro" required />
+            </div>
+            <div>
+              <label for="logradouro">Rua / Logradouro</label>
+              <input id="logradouro" name="logradouro" required />
+            </div>
+          </div>
+          <div class="grid col-3">
+            <div>
+              <label for="numero">Número</label>
+              <input id="numero" name="numero" required />
+            </div>
+            <div>
+              <label for="complemento">Complemento (opcional)</label>
+              <input id="complemento" name="complemento" />
+            </div>
+            <div>
+              <label for="email">E-mail</label>
+              <input id="email" name="email" type="email" placeholder="seuemail@exemplo.com" required />
+              <div class="error" id="err-email">Informe um e-mail válido.</div>
+            </div>
+          </div>
+          <div>
+            <label for="celular">Telefone celular</label>
+            <input id="celular" name="celular" inputmode="tel" placeholder="(11) 90000-0000" />
+          </div>
+          <div class="actions">
+            <button type="button" class="btn-ghost" id="voltar-2">Voltar</button>
+            <button type="submit">Próximo</button>
+          </div>
+
+          <div class="trust">
+            <div class="seals">
+              <div class="seal icp"><span class="ico">ID</span> Certificado Digital ICP-Brasil</div>
+              <div class="seal gov"><span class="ico">BR</span> Serviço Autenticado no GOV.BR</div>
+              <div class="seal ssl"><span class="ico">SSL</span> Conexão Segura 256 bits</div>
+            </div>
+            <div class="helpline">📞 <strong>Central de Atendimento: 0800 000 000</strong> (24h)</div>
+          </div>
+        </form>
+      </section>
+
+      <!-- ETAPA 3 -->
+      <section id="etapa-3">
+        <form id="form-cert" class="grid col-3" novalidate>
+          <div>
+            <label for="tipoCertidao">Tipo de certidão</label>
+            <select id="tipoCertidao" name="tipoCertidao">
+              <option selected>Nascimento</option>
+              <option>Casamento</option>
+              <option>Óbito</option>
+            </select>
+          </div>
+          <div>
+            <label for="livro">Nº do Livro (opcional)</label>
+            <input id="livro" name="livro" placeholder="Ex.: A-123" />
+          </div>
+          <div>
+            <label for="folha">Nº da Folha (opcional)</label>
+            <input id="folha" name="folha" placeholder="Ex.: 45" />
+          </div>
+          <div>
+            <label for="termo">Nº do Termo (opcional)</label>
+            <input id="termo" name="termo" placeholder="Ex.: 789" />
+          </div>
+        </form>
+        <div class="actions">
+          <button type="button" class="btn-ghost" id="voltar-3">Voltar</button>
+          <button type="button" id="continuar-resumo">Próximo</button>
+        </div>
+
+        <div class="trust">
+          <div class="seals">
+            <div class="seal icp"><span class="ico">ID</span> Certificado Digital ICP-Brasil</div>
+            <div class="seal gov"><span class="ico">BR</span> Serviço Autenticado no GOV.BR</div>
+            <div class="seal ssl"><span class="ico">SSL</span> Conexão Segura 256 bits</div>
+          </div>
+          <div class="helpline">📞 <strong>Central de Atendimento: 0800 000 000</strong> (24h)</div>
+        </div>
+      </section>
+
+      <!-- ETAPA 4 -->
+      <section id="etapa-4">
+        <div class="summary" id="resumo"></div>
+        <p class="hint" style="margin-top:10px">
+          <strong>Garantia:</strong> Todos os pedidos são processados diretamente pelo Cartório Central com garantia de entrega em todo território nacional.
+        </p>
+        <div class="actions">
+          <button type="button" class="btn-ghost" id="voltar-4">Voltar</button>
+          <button type="button" id="btn-confirmar" class="btn-secondary">Confirmar os dados</button>
+          <button type="button" id="btn-pagar" disabled>Realizar pagamento</button>
+        </div>
+
+        <div class="trust">
+          <div class="seals">
+            <div class="seal icp"><span class="ico">ID</span> Certificado Digital ICP-Brasil</div>
+            <div class="seal gov"><span class="ico">BR</span> Serviço Autenticado no GOV.BR</div>
+            <div class="seal ssl"><span class="ico">SSL</span> Conexão Segura 256 bits</div>
+          </div>
+          <div class="helpline">📞 <strong>Central de Atendimento: 0800 000 000</strong> (24h)</div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer>
+    <div class="foot">
+      <div class="panel">
+        <strong>Cartório Central de Registro Civil – Sede São Paulo/SP.</strong>
+        <div>CNPJ: 00.000.000/0000-00 – Av. Central, 123 – São Paulo/SP – CEP: 00000-000</div>
+        <div style="margin-top:6px;color:#64748b">
+          Este site utiliza seus dados apenas para processar a solicitação da 2ª via, em conformidade com a LGPD (Lei 13.709/2018).
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <div id="toast" style="position:fixed;right:16px;bottom:16px;background:#0f172a;color:#fff;padding:10px 14px;border-radius:10px;opacity:0;transform:translateY(8px);transition:.25s">Pronto!</div>
+
+  <script>
+    const CPF_API_URL = "";
+
+    const $ = (q) => document.querySelector(q);
+    const onlyDigits = (s) => (s||'').replace(/\D/g,'');
+    const maskCPF = (v) => v.replace(/\D/g,'').replace(/(\d{3})(\d)/,'$1.$2').replace(/(\d{3})(\d)/,'$1.$2').replace(/(\d{3})(\d{1,2})/,'$1-$2').replace(/(-\d{2})\d+?$/,'$1');
+    const maskCEP = (v) => v.replace(/\D/g,'').replace(/(\d{5})(\d)/,'$1-$2').slice(0,9);
+    const maskPhone = (v) => v.replace(/\D/g,'').replace(/(\d{2})(\d)/,'($1) $2').replace(/(\d{5})(\d{4})$/,'$1-$2').slice(0,16);
+    const toast = (m='Pronto!')=>{const t=$('#toast');t.textContent=m;t.style.opacity=1;t.style.transform='translateY(0)';setTimeout(()=>{t.style.opacity=0;t.style.transform='translateY(8px)';},1400)}
+    const isValidEmail = (s)=>/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s||'');
+    const isCPF = (cpf)=>{cpf=onlyDigits(cpf);if(!cpf||cpf.length!==11||/(\d)\1+/.test(cpf))return false;let s=0;for(let i=0;i<9;i++)s+=parseInt(cpf[i])*(10-i);let r=11-(s%11);if(r>=10)r=0;if(r!==parseInt(cpf[9]))return false;s=0;for(let i=0;i<10;i++)s+=parseInt(cpf[i])*(11-i);r=11-(s%11);if(r>=10)r=0;return r===parseInt(cpf[10])}
+
+    const setStep=(n)=>{
+      ['#etapa-1','#etapa-2','#etapa-3','#etapa-4'].forEach((sel,i)=>{const el=$(sel); el.classList.toggle('active', i===(n-1));});
+      document.querySelectorAll('.stepper .step').forEach(step=>{
+        const idx=parseInt(step.dataset.step,10);
+        step.classList.toggle('active',idx===n);
+        step.classList.toggle('done',idx<n);
+      });
+      $('#progress-bar').style.width = ((n-1)/3*100)+"%";
+      localStorage.setItem('etapaAtual',String(n));
+      window.scrollTo({top:0,behavior:'smooth'});
+    }
+
+    const saveData=(obj)=>{const d=JSON.parse(localStorage.getItem('solicitacao')||'{}');Object.assign(d,obj);localStorage.setItem('solicitacao',JSON.stringify(d));return d}
+    const getData=()=>JSON.parse(localStorage.getItem('solicitacao')||'{}');
+
+    const renderResumo=()=>{
+      const d=getData();
+      const rows=[
+        ['Nome',d.nome||'—'],['CPF',d.cpf||'—'],['Mãe',d.mae||'—'],['Pai',d.pai||'—'],['Nascimento',d.nascimento||'—'],
+        ['Naturalidade',(d.naturalidade&&d.ufNasc)?`${d.naturalidade}/${d.ufNasc}`:(d.naturalidade||d.ufNasc||'—')],
+        ['Sexo',d.sexo||'—'],['CEP',d.cep||'—'],['UF',d.uf||'—'],['Cidade',d.cidade||'—'],['Bairro',d.bairro||'—'],
+        ['Logradouro',d.logradouro||'—'],['Número',d.numero||'—'],['Complemento',d.complemento||'—'],['E-mail',d.email||'—'],['Celular',d.celular||'—'],
+        ['Tipo de certidão',d.tipoCertidao||'Nascimento'],['Livro',d.livro||'—'],['Folha',d.folha||'—'],['Termo',d.termo||'—']
+      ];
+      $('#resumo').innerHTML=rows.map(([k,v])=>`<div class="box"><div class="row"><strong>${k}</strong><span>${v}</span></div></div>`).join('');
+    }
+
+    async function preencherPorCEP(cep){
+      const limpo=onlyDigits(cep); if(limpo.length!==8) return;
+      try{
+        const r=await fetch(`https://viacep.com.br/ws/${limpo}/json`);
+        const j=await r.json();
+        if(!j.erro){
+          $('#uf').value=j.uf||'';
+          $('#cidade').value=j.localidade||'';
+          $('#bairro').value=j.bairro||'';
+          $('#logradouro').value=j.logradouro||'';
+        }
+      }catch(e){console.error('ViaCEP erro',e)}
+    }
+
+    async function preencherPorCPF(cpf){
+      const limpo=onlyDigits(cpf); if(limpo.length!==11) return;
+      try{
+        if(CPF_API_URL){
+          const r = await fetch(CPF_API_URL + limpo);
+          if(r.ok){
+            const j = await r.json();
+            if(j){
+              if(j.nome_mae) $('#mae').value=j.nome_mae;
+              if(j.nome_pai) $('#pai').value=j.nome_pai;
+              if(j.nascimento) $('#nascimento').value=j.nascimento;
+              if(j.nome) $('#nome').value=j.nome;
+            }
+          }
+        }else{
+          const seed=parseInt(limpo.slice(-2),10);
+          const M=["Maria","Ana","Patrícia","Cláudia","Luciana","Fernanda"];
+          const P=["José","João","Carlos","Paulo","Pedro","Rafael"];
+          $('#mae').value=`${M[seed%M.length]} da Silva`;
+          $('#pai').value=`${P[(seed+2)%P.length]} de Souza`;
+          const yyyy=1985+(seed%15); const mm=String((seed%12)+1).padStart(2,'0'); const dd=String((seed%28)+1).padStart(2,'0');
+          $('#nascimento').value=`${yyyy}-${mm}-${dd}`;
+        }
+      }catch(e){console.error('CPF API erro',e)}
+    }
+
+    const etapaSalva=parseInt(localStorage.getItem('etapaAtual')||'1',10); setStep([1,2,3,4].includes(etapaSalva)?etapaSalva:1);
+
+    $('#cpf').addEventListener('input',e=>e.target.value=maskCPF(e.target.value));
+    $('#cpf').addEventListener('blur',e=>{ if(isCPF(e.target.value)) preencherPorCPF(e.target.value) })
+    $('#cep').addEventListener('input',e=>{e.target.value=maskCEP(e.target.value); if(onlyDigits(e.target.value).length===8) preencherPorCEP(e.target.value)});
+    $('#celular').addEventListener('input',e=>e.target.value=maskPhone(e.target.value));
+
+    function show(id,cond){const el=$(id); if(!el) return; el.classList.toggle('show',!!cond)}
+
+    // Etapa 1 -> 2
+    $('#form-ident').addEventListener('submit',e=>{
+      e.preventDefault();
+      const nome=$('#nome').value.trim(); const cpf=$('#cpf').value.trim();
+      show('#err-nome',!nome); show('#err-cpf',!isCPF(cpf));
+      if(!nome || !isCPF(cpf)) return;
+      saveData({nome,cpf,mae:$('#mae').value.trim(),pai:$('#pai').value.trim(),nascimento:$('#nascimento').value,naturalidade:$('#naturalidade').value.trim(),ufNasc:$('#ufNasc').value.trim().toUpperCase(),sexo:$('#sexo').value});
+      setStep(2);
+    });
+
+    // Etapa 2 -> 3
+    $('#voltar-2').addEventListener('click',()=>setStep(1));
+    $('#form-end').addEventListener('submit',e=>{
+      e.preventDefault();
+      const cepOk = onlyDigits($('#cep').value).length===8;
+      const emailOk = isValidEmail($('#email').value);
+      show('#err-cep',!cepOk); show('#err-email',!emailOk);
+      const req=['uf','cidade','bairro','logradouro','numero'];
+      for(const id of req){ if(!$('#'+id).value.trim()) return toast('Preencha todos os campos obrigatórios'); }
+      if(!cepOk || !emailOk) return;
+      saveData({cep:$('#cep').value.trim(),uf:$('#uf').value.trim(),cidade:$('#cidade').value.trim(),bairro:$('#bairro').value.trim(),logradouro:$('#logradouro').value.trim(),numero:$('#numero').value.trim(),complemento:$('#complemento').value.trim(),email:$('#email').value.trim(),celular:$('#celular').value.trim()});
+      setStep(3);
+    });
+
+    // Etapa 3 -> 4
+    $('#voltar-3').addEventListener('click',()=>setStep(2));
+    $('#continuar-resumo').addEventListener('click',()=>{saveData({tipoCertidao:$('#tipoCertidao').value,livro:$('#livro').value.trim(),folha:$('#folha').value.trim(),termo:$('#termo').value.trim()}); renderResumo(); setStep(4);});
+
+    // Resumo
+    $('#voltar-4').addEventListener('click',()=>setStep(3));
+    $('#btn-confirmar').addEventListener('click',()=>{toast('Dados confirmados. Agora você pode realizar o pagamento.'); $('#btn-pagar').disabled=false;});
+    $('#btn-pagar').addEventListener('click',()=>{ /* coloque seu link do gateway aqui quando quiser */ });
+
+    // Restaurar dados
+    window.addEventListener('DOMContentLoaded',()=>{
+      const d=getData();
+      if(d.nome) $('#nome').value=d.nome; if(d.cpf) $('#cpf').value=d.cpf; if(d.mae) $('#mae').value=d.mae; if(d.pai) $('#pai').value=d.pai; if(d.nascimento) $('#nascimento').value=d.nascimento; if(d.naturalidade) $('#naturalidade').value=d.naturalidade; if(d.ufNasc) $('#ufNasc').value=d.ufNasc; if(d.sexo) $('#sexo').value=d.sexo;
+      if(d.cep) $('#cep').value=d.cep; if(d.uf) $('#uf').value=d.uf; if(d.cidade) $('#cidade').value=d.cidade; if(d.bairro) $('#bairro').value=d.bairro; if(d.logradouro) $('#logradouro').value=d.logradouro; if(d.numero) $('#numero').value=d.numero; if(d.complemento) $('#complemento').value=d.complemento; if(d.email) $('#email').value=d.email; if(d.celular) $('#celular').value=d.celular;
+      if(d.tipoCertidao) $('#tipoCertidao').value=d.tipoCertidao; if(d.livro) $('#livro').value=d.livro; if(d.folha) $('#folha').value=d.folha; if(d.termo) $('#termo').value=d.termo;
+      const etapa=parseInt(localStorage.getItem('etapaAtual')||'1',10); setStep([1,2,3,4].includes(etapa)?etapa:1); if(etapa===4) renderResumo();
+    });
+  </script>
+</body>
+</html>
