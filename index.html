@@ -69,7 +69,7 @@
     .step.done{border-color:#86efac;background:var(--ok-200)}
     .step.done .dot{background:var(--ok);color:#fff}
 
-    /* Stats (contador e prazo) */
+    /* Stats */
     .stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:4px 0 12px}
     .stat{
       background:#f8fafc;border:1px solid #e5e7eb;border-radius:12px;padding:10px;
@@ -92,8 +92,8 @@
       font-size:16px;min-height:48px;outline:none;transition:.2s;
     }
     input:focus, select:focus{border-color:#b9ccff;box-shadow:0 0 0 3px rgba(14,115,255,.12)}
-    .hint{font-size:12px;color:var(--muted)}
-    .error{font-size:12px;color:var(--danger);margin-top:6px;display:none}
+    .hint{font-size:12px;color:#64748b}
+    .error{font-size:12px;color:#ef4444;margin-top:6px;display:none}
     .error.show{display:block}
 
     /* Actions */
@@ -119,7 +119,7 @@
     .summary .row{display:flex;justify-content:space-between;gap:12px;padding:6px 0;border-bottom:1px dashed #e5e7eb}
     .summary .row:last-child{border-bottom:none}
 
-    /* Bloco de selos + atendimento */
+    /* Selos + atendimento */
     .trust{margin-top:14px;border-top:1px dashed #e5e7eb;padding-top:12px;display:grid;gap:10px;grid-template-columns:1fr}
     .seals{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
     .seal{
@@ -464,8 +464,8 @@
   <div id="toast" style="position:fixed;right:16px;bottom:16px;background:#0f172a;color:#fff;padding:10px 14px;border-radius:10px;opacity:0;transform:translateY(8px);transition:.25s">Pronto!</div>
 
   <script>
+    /* ===== Helpers ===== */
     const CPF_API_URL = "";
-
     const $ = (q) => document.querySelector(q);
     const onlyDigits = (s) => (s||'').replace(/\D/g,'');
     const maskCPF = (v) => v.replace(/\D/g,'').replace(/(\d{3})(\d)/,'$1.$2').replace(/(\d{3})(\d)/,'$1.$2').replace(/(\d{3})(\d{1,2})/,'$1-$2').replace(/(-\d{2})\d+?$/,'$1');
@@ -473,34 +473,22 @@
     const maskPhone = (v) => v.replace(/\D/g,'').replace(/(\d{2})(\d)/,'($1) $2').replace(/(\d{5})(\d{4})$/,'$1-$2').slice(0,16);
     const toast = (m='Pronto!')=>{const t=$('#toast');t.textContent=m;t.style.opacity=1;t.style.transform='translateY(0)';setTimeout(()=>{t.style.opacity=0;t.style.transform='translateY(8px)';},1400)}
     const isValidEmail = (s)=>/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s||'');
-    const isCPF = (cpf)=>{cpf=onlyDigits(cpf);if(!cpf||cpf.length!==11||/(\d)\1+/.test(cpf))return false;let s=0;for(let i=0;i<9;i++)s+=parseInt(cpf[i])*(10-i);let r=11-(s%11);if(r>=10)r=0;if(r!==parseInt(cpf[9]))return false;s=0;for(let i=0<10;i++){}}
-  </script>
-  <script>
-    /* ✅ isCPF reescrita (corrige erro de colagem acidental) */
-    (function(){
-      const onlyDigits = (s) => (s||'').replace(/\D/g,'');
-      window.isCPF = function(cpf){
-        cpf = onlyDigits(cpf);
-        if(!cpf || cpf.length!==11 || /(\d)\1{10}/.test(cpf)) return false;
-        let sum = 0, rest;
-        for(let i=1;i<=9;i++) sum += parseInt(cpf.substring(i-1,i))*(11-i);
-        rest = (sum*10)%11; if(rest===10||rest===11) rest=0;
-        if(rest !== parseInt(cpf.substring(9,10))) return false;
-        sum = 0;
-        for(let i=1;i<=10;i++) sum += parseInt(cpf.substring(i-1,i))*(12-i);
-        rest = (sum*10)%11; if(rest===10||rest===11) rest=0;
-        return rest === parseInt(cpf.substring(10,11));
-      }
-    })();
 
-    /* contador de solicitações (valor aleatório plausível) */
-    (function(){
-      const base = 180 + Math.floor(Math.random()*90); // 180–270
-      const cnt = document.getElementById('cnt');
-      if(cnt){ cnt.textContent = base.toString(); }
-    })();
+    /* ✅ isCPF correta (única versão) */
+    function isCPF(cpf){
+      cpf = onlyDigits(cpf);
+      if(!cpf || cpf.length!==11 || /(\d)\1{10}/.test(cpf)) return false;
+      let sum = 0, rest;
+      for(let i=1;i<=9;i++) sum += parseInt(cpf.substring(i-1,i))*(11-i);
+      rest = (sum*10)%11; if(rest===10||rest===11) rest=0;
+      if(rest !== parseInt(cpf.substring(9,10))) return false;
+      sum = 0;
+      for(let i=1;i<=10;i++) sum += parseInt(cpf.substring(i-1,i))*(12-i);
+      rest = (sum*10)%11; if(rest===10||rest===11) rest=0;
+      return rest === parseInt(cpf.substring(10,11));
+    }
 
-    /* navegação entre etapas com loading curto */
+    /* ===== Navegação / Estado ===== */
     const setStep=(n)=>{
       ['#etapa-1','#etapa-2','#etapa-3','#etapa-4'].forEach((sel,i)=>{
         const el=$(sel); el.classList.toggle('active', i===(n-1));
@@ -513,9 +501,9 @@
       $('#progress-bar').style.width = ((n-1)/3*100)+"%";
       localStorage.setItem('etapaAtual',String(n));
       window.scrollTo({top:0,behavior:'smooth'});
-    }
+    };
 
-    const saveData=(obj)=>{const d=JSON.parse(localStorage.getItem('solicitacao')||'{}');Object.assign(d,obj);localStorage.setItem('solicitacao',JSON.stringify(d));return d}
+    const saveData=(obj)=>{const d=JSON.parse(localStorage.getItem('solicitacao')||'{}');Object.assign(d,obj);localStorage.setItem('solicitacao',JSON.stringify(d));return d};
     const getData=()=>JSON.parse(localStorage.getItem('solicitacao')||'{}');
 
     const renderResumo=()=>{
@@ -528,10 +516,10 @@
         ['Tipo de certidão',d.tipoCertidao||'Nascimento'],['Livro',d.livro||'—'],['Folha',d.folha||'—'],['Termo',d.termo||'—']
       ];
       $('#resumo').innerHTML=rows.map(([k,v])=>`<div class="box"><div class="row"><strong>${k}</strong><span>${v}</span></div></div>`).join('');
-    }
+    };
 
     async function preencherPorCEP(cep){
-      const limpo=(cep||'').replace(/\D/g,''); if(limpo.length!==8) return;
+      const limpo=onlyDigits(cep); if(limpo.length!==8) return;
       try{
         const r=await fetch(`https://viacep.com.br/ws/${limpo}/json`);
         const j=await r.json();
@@ -545,7 +533,7 @@
     }
 
     async function preencherPorCPF(cpf){
-      const limpo=(cpf||'').replace(/\D/g,''); if(limpo.length!==11) return;
+      const limpo=onlyDigits(cpf); if(limpo.length!==11) return;
       try{
         if(CPF_API_URL){
           const r = await fetch(CPF_API_URL + limpo);
@@ -570,9 +558,16 @@
       }catch(e){console.error('CPF API erro',e)}
     }
 
+    /* ===== Inicialização ===== */
+    const etapaSalva=parseInt(localStorage.getItem('etapaAtual')||'1',10);
+    setStep([1,2,3,4].includes(etapaSalva)?etapaSalva:1);
+
+    // contador fake (solicitações)
+    (function(){ const base = 180 + Math.floor(Math.random()*90); const cnt = document.getElementById('cnt'); if(cnt){ cnt.textContent = base.toString(); } })();
+
     // máscaras + auto
     $('#cpf').addEventListener('input',e=>e.target.value=maskCPF(e.target.value));
-    $('#cpf').addEventListener('blur',e=>{ if(isCPF(e.target.value)) preencherPorCPF(e.target.value) })
+    $('#cpf').addEventListener('blur',e=>{ if(isCPF(e.target.value)) preencherPorCPF(e.target.value) });
     $('#cep').addEventListener('input',e=>{e.target.value=maskCEP(e.target.value); if(onlyDigits(e.target.value).length===8) preencherPorCEP(e.target.value)});
     $('#celular').addEventListener('input',e=>e.target.value=maskPhone(e.target.value));
 
@@ -619,7 +614,7 @@
     $('#btn-confirmar').addEventListener('click',()=>{toast('Dados confirmados. Agora você pode realizar o pagamento.'); $('#btn-pagar').disabled=false;});
     $('#btn-pagar').addEventListener('click',()=>{ /* coloque seu link do gateway aqui quando quiser */ });
 
-    // Restaurar dados
+    // Restaurar dados ao recarregar
     window.addEventListener('DOMContentLoaded',()=>{
       const d=getData();
       if(d.nome) $('#nome').value=d.nome; if(d.cpf) $('#cpf').value=d.cpf; if(d.mae) $('#mae').value=d.mae; if(d.pai) $('#pai').value=d.pai; if(d.nascimento) $('#nascimento').value=d.nascimento; if(d.naturalidade) $('#naturalidade').value=d.naturalidade; if(d.ufNasc) $('#ufNasc').value=d.ufNasc; if(d.sexo) $('#sexo').value=d.sexo;
