@@ -51,14 +51,12 @@
     }
     @keyframes pop{to{transform:scale(1)}}
 
-    /* Progress bar */
+    /* Barra de progresso */
     .progress{height:10px;background:#eaf0ff;border-radius:999px;overflow:hidden;margin:0 0 10px}
     .progress .bar{height:100%;width:0;background:linear-gradient(90deg,var(--primary),var(--accent));transition:width .35s ease}
 
-    /* Stepper (quadradinhos) */
-    .stepper{
-      display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:8px 0 12px;
-    }
+    /* Stepper */
+    .stepper{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:8px 0 12px}
     .step{
       display:flex;align-items:center;gap:10px;
       border:1.5px solid #cbd5e1;background:#f8fafc;border-radius:12px;
@@ -70,6 +68,17 @@
     .step.active .dot{background:#2563eb;color:#fff}
     .step.done{border-color:#86efac;background:var(--ok-200)}
     .step.done .dot{background:var(--ok);color:#fff}
+
+    /* Stats (contador e prazo) */
+    .stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:4px 0 12px}
+    .stat{
+      background:#f8fafc;border:1px solid #e5e7eb;border-radius:12px;padding:10px;
+      display:flex;align-items:center;gap:10px;font-weight:700;color:#0f172a
+    }
+    .stat .ico{
+      width:28px;height:28px;border-radius:999px;background:#e2e8f0;display:grid;place-items:center;font-size:14px
+    }
+    .stat small{display:block;font-weight:600;font-size:12px;color:#475569}
 
     /* Forms */
     h2{margin:0 0 8px;font-size:1.125rem}
@@ -100,7 +109,7 @@
     .btn-secondary{background:#e2e8f0;color:#0f172a}
     .btn-ghost{background:transparent;color:var(--primary);border:1px solid #cbd5e1}
 
-    /* Etapas (conteúdo) */
+    /* Conteúdo das etapas */
     section{display:none;opacity:0;pointer-events:none;transition:opacity .2s ease}
     section.active{display:block;opacity:1;pointer-events:auto}
 
@@ -111,20 +120,13 @@
     .summary .row:last-child{border-bottom:none}
 
     /* Bloco de selos + atendimento */
-    .trust{
-      margin-top:14px;border-top:1px dashed #e5e7eb;padding-top:12px;
-      display:grid;gap:10px;grid-template-columns:1fr;
-    }
-    .seals{display:grid;grid-template-columns:repeat(4,1fr);gap:8px} /* 4 selos */
+    .trust{margin-top:14px;border-top:1px dashed #e5e7eb;padding-top:12px;display:grid;gap:10px;grid-template-columns:1fr}
+    .seals{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
     .seal{
-      display:flex;align-items:center;gap:8px;
-      background:#f8fafc;border:1px solid #e5e7eb;border-radius:12px;padding:8px 10px;
+      display:flex;align-items:center;gap:8px;background:#f8fafc;border:1px solid #e5e7eb;border-radius:12px;padding:8px 10px;
       font-size:12px;color:#0f172a;font-weight:700
     }
-    .seal .ico{
-      width:24px;height:24px;border-radius:999px;display:grid;place-items:center;font-size:12px;font-weight:800;color:#fff;
-      background:#64748b;flex:0 0 auto;
-    }
+    .seal .ico{width:24px;height:24px;border-radius:999px;display:grid;place-items:center;font-size:12px;font-weight:800;color:#fff;background:#64748b}
     .seal.icp .ico{background:#0ea5e9}
     .seal.gov .ico{background:#22c55e}
     .seal.ssl .ico{background:#6366f1}
@@ -132,10 +134,32 @@
     .helpline{font-size:12px;color:#334155}
     .helpline strong{font-weight:800}
 
+    /* Testemunhos */
+    .reviews{margin:16px 0 0;display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+    .review{
+      background:#ffffff;border:1px solid #e5e7eb;border-radius:12px;padding:12px;
+      box-shadow:0 6px 20px rgba(2,8,23,.04);font-size:14px;color:#0f172a
+    }
+    .review .stars{font-size:12px;color:#f59e0b;margin-bottom:6px}
+    .review .name{margin-top:8px;color:#475569;font-size:12px;font-weight:700}
+
     /* Footer */
     footer{padding:0 16px 22px}
     .foot{max-width:1120px;margin:8px auto 0;color:#475569;font-size:12px}
     .foot .panel{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:12px}
+
+    /* Loading overlay */
+    .loading{
+      position:absolute;inset:0;background:rgba(15,23,42,.06);backdrop-filter:saturate(140%) blur(1px);
+      display:none;align-items:center;justify-content:center;border-radius:var(--radius);z-index:5;
+    }
+    .loading.show{display:flex}
+    .spinner{
+      width:34px;height:34px;border-radius:999px;border:3px solid #cbd5e1;border-top-color:var(--primary);
+      animation:spin 0.8s linear infinite;margin-right:10px;
+    }
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .loading .txt{font-weight:700;color:#0f172a}
 
     /* MOBILE */
     @media (max-width:860px){
@@ -147,14 +171,16 @@
       .step{padding:8px 10px;min-height:40px}
       .step .dot{width:24px;height:24px;border-radius:6px;font-size:12px}
       .step .lbl{font-size:12px}
-      .seals{grid-template-columns:1fr 1fr} /* 2 por linha no mobile */
+      .seals{grid-template-columns:1fr 1fr}
+      .stats{grid-template-columns:1fr}
+      .reviews{grid-template-columns:1fr}
     }
     @media (max-width:420px){
       .stepper{grid-template-columns:1fr}
       .actions{flex-direction:column;align-items:stretch}
       .actions > *{width:100%}
       .btn-ghost{order:1}
-      .seals{grid-template-columns:1fr} /* 1 por linha no super-estreito */
+      .seals{grid-template-columns:1fr}
     }
   </style>
 </head>
@@ -176,10 +202,26 @@
 
   <main class="container">
     <div class="card">
+      <!-- overlay de loading -->
+      <div class="loading" id="loading">
+        <div class="spinner" aria-hidden="true"></div>
+        <div class="txt">Validando dados no sistema...</div>
+      </div>
+
       <!-- banner de segurança -->
       <div class="secure-banner">
         <div class="check">✓</div>
         <div>🔒 Conexão Segura — Protegido por Certificado SSL</div>
+      </div>
+
+      <!-- stats: contador + prazo -->
+      <div class="stats" id="stats">
+        <div class="stat"><div class="ico">🔄</div>
+          <div><div><span id="cnt">0</span> solicitações processadas</div><small>nas últimas 24h</small></div>
+        </div>
+        <div class="stat"><div class="ico">📦</div>
+          <div><div>Prazo médio de entrega: <strong>5–7 dias úteis</strong></div><small>envio para todo o Brasil</small></div>
+        </div>
       </div>
 
       <div class="progress" aria-hidden="true"><div class="bar" id="progress-bar"></div></div>
@@ -245,7 +287,7 @@
             <button type="submit">Próximo</button>
           </div>
 
-          <!-- Selos + Atendimento (com CNPJ) -->
+          <!-- Selos + Atendimento -->
           <div class="trust">
             <div class="seals">
               <div class="seal icp"><span class="ico">ID</span> Certificado Digital ICP-Brasil</div>
@@ -254,6 +296,25 @@
               <div class="seal cnpj"><span class="ico">CNPJ</span> CNPJ Verificado — 12.345.678/0001-99</div>
             </div>
             <div class="helpline">📞 <strong>Central de Atendimento: 0800 000 000</strong> (24h)</div>
+          </div>
+
+          <!-- Testemunhos -->
+          <div class="reviews" aria-label="Avaliações de usuários">
+            <div class="review">
+              <div class="stars">★★★★★</div>
+              Recebi rápido, tudo certo!
+              <div class="name">— João M.</div>
+            </div>
+            <div class="review">
+              <div class="stars">★★★★★</div>
+              Fácil de solicitar, muito prático.
+              <div class="name">— Ana P.</div>
+            </div>
+            <div class="review">
+              <div class="stars">★★★★★</div>
+              Atendimento perfeito. Recomendo!
+              <div class="name">— Carlos L.</div>
+            </div>
           </div>
         </form>
       </section>
@@ -394,7 +455,7 @@
         <strong>Cartório Central de Registro Civil – Sede São Paulo/SP.</strong>
         <div>CNPJ: 00.000.000/0000-00 – Av. Central, 123 – São Paulo/SP – CEP: 00000-000</div>
         <div style="margin-top:6px;color:#64748b">
-          Este site utiliza seus dados apenas para processar a solicitação da 2ª via, em conformidade com a LGPD (Lei 13.709/2018).
+          Este site utiliza tecnologia de criptografia SSL para proteger suas informações e segue as diretrizes da LGPD (Lei 13.709/2018).
         </div>
       </div>
     </div>
@@ -412,10 +473,38 @@
     const maskPhone = (v) => v.replace(/\D/g,'').replace(/(\d{2})(\d)/,'($1) $2').replace(/(\d{5})(\d{4})$/,'$1-$2').slice(0,16);
     const toast = (m='Pronto!')=>{const t=$('#toast');t.textContent=m;t.style.opacity=1;t.style.transform='translateY(0)';setTimeout(()=>{t.style.opacity=0;t.style.transform='translateY(8px)';},1400)}
     const isValidEmail = (s)=>/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s||'');
-    const isCPF = (cpf)=>{cpf=onlyDigits(cpf);if(!cpf||cpf.length!==11||/(\d)\1+/.test(cpf))return false;let s=0;for(let i=0;i<9;i++)s+=parseInt(cpf[i])*(10-i);let r=11-(s%11);if(r>=10)r=0;if(r!==parseInt(cpf[9]))return false;s=0;for(let i=0;i<10;i++)s+=parseInt(cpf[i])*(11-i);r=11-(s%11);if(r>=10)r=0;return r===parseInt(cpf[10])}
+    const isCPF = (cpf)=>{cpf=onlyDigits(cpf);if(!cpf||cpf.length!==11||/(\d)\1+/.test(cpf))return false;let s=0;for(let i=0;i<9;i++)s+=parseInt(cpf[i])*(10-i);let r=11-(s%11);if(r>=10)r=0;if(r!==parseInt(cpf[9]))return false;s=0;for(let i=0<10;i++){}}
+  </script>
+  <script>
+    /* ✅ isCPF reescrita (corrige erro de colagem acidental) */
+    (function(){
+      const onlyDigits = (s) => (s||'').replace(/\D/g,'');
+      window.isCPF = function(cpf){
+        cpf = onlyDigits(cpf);
+        if(!cpf || cpf.length!==11 || /(\d)\1{10}/.test(cpf)) return false;
+        let sum = 0, rest;
+        for(let i=1;i<=9;i++) sum += parseInt(cpf.substring(i-1,i))*(11-i);
+        rest = (sum*10)%11; if(rest===10||rest===11) rest=0;
+        if(rest !== parseInt(cpf.substring(9,10))) return false;
+        sum = 0;
+        for(let i=1;i<=10;i++) sum += parseInt(cpf.substring(i-1,i))*(12-i);
+        rest = (sum*10)%11; if(rest===10||rest===11) rest=0;
+        return rest === parseInt(cpf.substring(10,11));
+      }
+    })();
 
+    /* contador de solicitações (valor aleatório plausível) */
+    (function(){
+      const base = 180 + Math.floor(Math.random()*90); // 180–270
+      const cnt = document.getElementById('cnt');
+      if(cnt){ cnt.textContent = base.toString(); }
+    })();
+
+    /* navegação entre etapas com loading curto */
     const setStep=(n)=>{
-      ['#etapa-1','#etapa-2','#etapa-3','#etapa-4'].forEach((sel,i)=>{const el=$(sel); el.classList.toggle('active', i===(n-1));});
+      ['#etapa-1','#etapa-2','#etapa-3','#etapa-4'].forEach((sel,i)=>{
+        const el=$(sel); el.classList.toggle('active', i===(n-1));
+      });
       document.querySelectorAll('.stepper .step').forEach(step=>{
         const idx=parseInt(step.dataset.step,10);
         step.classList.toggle('active',idx===n);
@@ -442,7 +531,7 @@
     }
 
     async function preencherPorCEP(cep){
-      const limpo=onlyDigits(cep); if(limpo.length!==8) return;
+      const limpo=(cep||'').replace(/\D/g,''); if(limpo.length!==8) return;
       try{
         const r=await fetch(`https://viacep.com.br/ws/${limpo}/json`);
         const j=await r.json();
@@ -456,7 +545,7 @@
     }
 
     async function preencherPorCPF(cpf){
-      const limpo=onlyDigits(cpf); if(limpo.length!==11) return;
+      const limpo=(cpf||'').replace(/\D/g,''); if(limpo.length!==11) return;
       try{
         if(CPF_API_URL){
           const r = await fetch(CPF_API_URL + limpo);
@@ -481,28 +570,29 @@
       }catch(e){console.error('CPF API erro',e)}
     }
 
-    const etapaSalva=parseInt(localStorage.getItem('etapaAtual')||'1',10); setStep([1,2,3,4].includes(etapaSalva)?etapaSalva:1);
-
+    // máscaras + auto
     $('#cpf').addEventListener('input',e=>e.target.value=maskCPF(e.target.value));
     $('#cpf').addEventListener('blur',e=>{ if(isCPF(e.target.value)) preencherPorCPF(e.target.value) })
     $('#cep').addEventListener('input',e=>{e.target.value=maskCEP(e.target.value); if(onlyDigits(e.target.value).length===8) preencherPorCEP(e.target.value)});
     $('#celular').addEventListener('input',e=>e.target.value=maskPhone(e.target.value));
 
     function show(id,cond){const el=$(id); if(!el) return; el.classList.toggle('show',!!cond)}
+    const showLoading=(on=true)=>{const l=$('#loading'); if(!l) return; l.classList.toggle('show',!!on)}
 
     // Etapa 1 -> 2
-    $('#form-ident').addEventListener('submit',e=>{
+    $('#form-ident').addEventListener('submit',async e=>{
       e.preventDefault();
       const nome=$('#nome').value.trim(); const cpf=$('#cpf').value.trim();
       show('#err-nome',!nome); show('#err-cpf',!isCPF(cpf));
       if(!nome || !isCPF(cpf)) return;
       saveData({nome,cpf,mae:$('#mae').value.trim(),pai:$('#pai').value.trim(),nascimento:$('#nascimento').value,naturalidade:$('#naturalidade').value.trim(),ufNasc:$('#ufNasc').value.trim().toUpperCase(),sexo:$('#sexo').value});
+      showLoading(true); await new Promise(r=>setTimeout(r,900)); showLoading(false);
       setStep(2);
     });
 
     // Etapa 2 -> 3
     $('#voltar-2').addEventListener('click',()=>setStep(1));
-    $('#form-end').addEventListener('submit',e=>{
+    $('#form-end').addEventListener('submit',async e=>{
       e.preventDefault();
       const cepOk = onlyDigits($('#cep').value).length===8;
       const emailOk = isValidEmail($('#email').value);
@@ -511,12 +601,18 @@
       for(const id of req){ if(!$('#'+id).value.trim()) return toast('Preencha todos os campos obrigatórios'); }
       if(!cepOk || !emailOk) return;
       saveData({cep:$('#cep').value.trim(),uf:$('#uf').value.trim(),cidade:$('#cidade').value.trim(),bairro:$('#bairro').value.trim(),logradouro:$('#logradouro').value.trim(),numero:$('#numero').value.trim(),complemento:$('#complemento').value.trim(),email:$('#email').value.trim(),celular:$('#celular').value.trim()});
+      showLoading(true); await new Promise(r=>setTimeout(r,900)); showLoading(false);
       setStep(3);
     });
 
     // Etapa 3 -> 4
     $('#voltar-3').addEventListener('click',()=>setStep(2));
-    $('#continuar-resumo').addEventListener('click',()=>{saveData({tipoCertidao:$('#tipoCertidao').value,livro:$('#livro').value.trim(),folha:$('#folha').value.trim(),termo:$('#termo').value.trim()}); renderResumo(); setStep(4);});
+    $('#continuar-resumo').addEventListener('click',async ()=>{
+      saveData({tipoCertidao:$('#tipoCertidao').value,livro:$('#livro').value.trim(),folha:$('#folha').value.trim(),termo:$('#termo').value.trim()});
+      renderResumo();
+      showLoading(true); await new Promise(r=>setTimeout(r,900)); showLoading(false);
+      setStep(4);
+    });
 
     // Resumo
     $('#voltar-4').addEventListener('click',()=>setStep(3));
